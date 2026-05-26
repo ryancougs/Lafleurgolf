@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LaFleur Golf | Kahnawake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Tokens ─── */
+    :root {
+      --g900: #080f0b;
+      --g800: #0f2018;
+      --g700: #163226;
+      --g600: #1e4a34;
+      --g500: #2a6347;
+      --gold:  #b8932a;
+      --gold2: #d4af60;
+      --cream: #f3ecd8;
+      --cream2: #e8dfc6;
+      --white: #ffffff;
+      --muted: rgba(243,236,216,0.55);
+      --r: 6px;
+      --mw: 1160px;
+      --nh: 68px;
+    }
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--g800); line-height: 1.6; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── Nav ─── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: var(--nh);
+      display: flex; align-items: center;
+      padding: 0 2rem;
+      transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease;
+    }
+    .nav.scrolled {
+      background: rgba(8,15,11,0.96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.5);
+    }
+    .nav-inner {
+      width: 100%; max-width: var(--mw);
+      margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.35rem;
+      color: var(--cream);
+      letter-spacing: 0.04em;
+      display: flex; align-items: center; gap: 0.55rem;
+    }
+    .nav-logo span { color: var(--gold2); font-style: italic; }
+    .nav-badge  { width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; }
+    .foot-badge { width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--cream); font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      opacity: 0.75; transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+    .nav-cta {
+      background: var(--gold); color: var(--white) !important;
+      padding: 0.45rem 1.2rem; border-radius: var(--r);
+      opacity: 1 !important; transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--gold2) !important; }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 6px; background: none; border: none;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--cream); border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none; position: fixed;
+      top: var(--nh); left: 0; right: 0;
+      background: rgba(8,15,11,0.98);
+      backdrop-filter: blur(12px);
+      padding: 1.5rem 2rem; flex-direction: column; gap: 0;
+      z-index: 199; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--cream); font-size: 0.95rem; font-weight: 500;
+      padding: 0.85rem 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+      letter-spacing: 0.06em;
+    }
+    .mobile-menu a:last-child { border-bottom: none; color: var(--gold2); margin-top: 0.5rem; }
+
+    /* ─── Hero ─── */
+    .hero {
+      min-height: 100vh;
+      background: var(--g900);
+      background-image:
+        radial-gradient(ellipse 80% 70% at 50% 80%, rgba(22,50,38,0.7) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 70% 20%, rgba(30,74,52,0.3) 0%, transparent 60%);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: calc(var(--nh) + 3rem) 2rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    /* subtle grid texture */
+    .hero::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 680px; }
+
+    /* club logo badge */
+    .hero-badge { width: 180px; height: 180px; margin: 0 auto 2.5rem; display: block; border-radius: 50%; }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.2rem, 9vw, 5.8rem);
+      color: var(--cream); line-height: 1.0; letter-spacing: -0.015em;
+      margin-bottom: 1.1rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold2); }
+
+    .hero-tagline {
+      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+      color: var(--cream); opacity: 0.6;
+      letter-spacing: 0.07em; margin-bottom: 2.8rem;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.8rem 2rem; border-radius: var(--r);
+      font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s;
+      cursor: pointer; border: none;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.35); }
+    .btn-gold { background: var(--gold); color: var(--white); }
+    .btn-gold:hover { background: var(--gold2); }
+    .btn-ghost {
+      background: transparent; color: var(--cream);
+      border: 1.5px solid rgba(243,236,216,0.3);
+    }
+    .btn-ghost:hover { border-color: var(--cream); }
+
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: var(--cream); opacity: 0.3;
+      font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .scroll-hint::after {
+      content: ''; display: block;
+      width: 1px; height: 44px; background: var(--cream);
+      animation: drip 2.2s ease-in-out infinite;
+    }
+    @keyframes drip {
+      0%, 100% { opacity: 0.2; transform: scaleY(0.7); transform-origin: top; }
+      60%       { opacity: 0.7; transform: scaleY(1.1); transform-origin: top; }
+    }
+
+    /* ─── Section base ─── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: var(--mw); margin: 0 auto; }
+    .eyebrow {
+      display: block;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.1rem, 5vw, 3.2rem);
+      line-height: 1.12; margin-bottom: 1.5rem;
+    }
+    .rule { width: 44px; height: 2px; background: var(--gold); margin-bottom: 1.75rem; }
+
+    /* ─── About ─── */
+    .about { background: var(--cream); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+    }
+    .about .section-title { color: var(--g800); }
+    .about-body {
+      font-size: 1.05rem; color: #3b5248; line-height: 1.85;
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .stat {
+      background: var(--g800); border-radius: 8px;
+      padding: 1.8rem 1.2rem; text-align: center; color: var(--cream);
+    }
+    .stat-n {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.6rem; color: var(--gold2); line-height: 1; margin-bottom: 0.25rem;
+    }
+    .stat-n small { font-size: 1.7rem; }
+    .stat-l { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; }
+    .stat-wide {
+      grid-column: span 3;
+      background: var(--g700); padding: 1.2rem 1.5rem;
+      display: flex; align-items: center; gap: 0.75rem; border-radius: 8px;
+    }
+    .stat-wide svg { width: 20px; height: 20px; color: var(--gold); flex-shrink: 0; }
+    .stat-wide-text strong {
+      display: block; font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem; color: var(--cream); line-height: 1.2;
+    }
+    .stat-wide-text span { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.06em; }
+
+    /* ─── Course ─── */
+    .course { background: var(--g800); }
+    .course .eyebrow { color: var(--gold2); }
+    .course .section-title { color: var(--cream); }
+    .course-sub { color: var(--muted); max-width: 520px; margin-bottom: 3.5rem; font-size: 1.05rem; }
+
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .card {
+      background: var(--g900);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 2.5rem 2rem;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.45);
+      border-color: var(--gold);
+    }
+    .card-icon {
+      width: 44px; height: 44px; margin-bottom: 1.5rem; color: var(--gold);
+    }
+    .card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem; color: var(--cream); margin-bottom: 0.75rem;
+    }
+    .card p { color: var(--muted); font-size: 0.95rem; line-height: 1.75; }
+
+    /* ─── Gallery ─── */
+    .gallery { background: var(--cream2); }
+    .gallery .section-title { color: var(--g800); }
+    .gallery-sub { color: #4a5c50; margin-bottom: 2.5rem; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 240px 240px;
+      gap: 10px;
+    }
+    .g-item {
+      border-radius: 8px; overflow: hidden;
+      background: var(--g700); position: relative;
+    }
+    .g-item:first-child { grid-column: span 2; grid-row: span 2; }
+    .g-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .g-item:hover img { transform: scale(1.06); }
+    .g-item::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,15,11,0.4) 0%, transparent 50%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .g-item:hover::after { opacity: 1; }
+
+    /* ─── Contact ─── */
+    .contact { background: var(--g900); }
+    .contact .eyebrow { color: var(--gold2); }
+    .contact .section-title { color: var(--cream); }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1.5fr;
+      gap: 4rem; align-items: start;
+    }
+    .contact-lead { color: var(--muted); font-size: 1rem; margin-bottom: 2.5rem; line-height: 1.8; }
+
+    .info-block { margin-bottom: 2rem; }
+    .info-block h4 {
+      font-size: 0.65rem; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.6rem;
+    }
+    .info-block p, .info-block a {
+      color: rgba(243,236,216,0.75); font-size: 0.95rem; line-height: 1.85;
+      display: block;
+    }
+    .info-block a:hover { color: var(--gold2); }
+
+    .hours { width: 100%; border-collapse: collapse; }
+    .hours td { padding: 0.28rem 0; font-size: 0.9rem; color: rgba(243,236,216,0.7); }
+    .hours td:last-child { text-align: right; opacity: 0.55; }
+    .hours tr:last-child td { color: var(--gold2); opacity: 1; }
+
+    .map-wrap {
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      height: 440px; background: var(--g800);
+    }
+    .map-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+    /* ─── Footer ─── */
+    footer {
+      background: #040909;
+      padding: 2.5rem 2rem;
+      color: rgba(243,236,216,0.4);
+    }
+    .footer-row {
+      max-width: var(--mw); margin: 0 auto;
+      display: flex; flex-wrap: wrap; gap: 1.5rem 3rem;
+      align-items: center; justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem; color: var(--cream);
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .footer-logo span { color: var(--gold); font-style: italic; }
+
+    .footer-nav { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
+    .footer-nav a {
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .footer-nav a:hover { color: var(--cream); }
+
+    .socials { display: flex; gap: 0.65rem; }
+    .socials a {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 50%;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .socials a:hover { border-color: var(--gold); color: var(--gold); }
+    .socials svg { width: 14px; height: 14px; }
+
+    .footer-copy {
+      width: 100%; text-align: center; padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.72rem; margin-top: 0.5rem;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .cards { grid-template-columns: 1fr; max-width: 480px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .map-wrap { height: 300px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .g-item:first-child { grid-column: span 2; height: 260px; }
+      .g-item { height: 200px; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 4rem 1.25rem; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat-wide { grid-column: span 2; }
+      .gallery-grid { gap: 8px; }
+      .g-item:first-child { height: 200px; }
+      .g-item { height: 160px; }
+      .hero-btns .btn-ghost { display: none; }
+      .footer-row { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ NAV ═══════════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <img class="nav-badge" src="logo.png" alt="" />
+      LaFleur <span>Golf</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#course">The Course</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#contact" class="nav-cta">Book a Tee Time</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+  <a href="#about"   onclick="closeMenu()">About</a>
+  <a href="#course"  onclick="closeMenu()">The Course</a>
+  <a href="#gallery" onclick="closeMenu()">Gallery</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <a href="#contact" onclick="closeMenu()">Book a Tee Time</a>
+</nav>
+
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-content">
+
+    <img class="hero-badge" src="logo.png" alt="LaFleur Golf Kahnawake" />
+
+    <h1>LaFleur <em>Golf</em></h1>
+    <p class="hero-tagline">Where tradition meets the fairway — Kahnawake's premier golf experience</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn btn-gold">Book a Tee Time</a>
+      <a href="#course"  class="btn btn-ghost">Explore the Course</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">Scroll</div>
+</section>
+
+
+<!-- ═══════════════════════════ ABOUT ═══════════════════════════ -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="about-grid">
+
+      <div>
+        <span class="eyebrow">Our Story</span>
+        <h2 class="section-title">A Course Built for the Love of the Game</h2>
+        <div class="rule"></div>
+        <p class="about-body">
+          Nestled in the heart of Kahnawake, LaFleur Golf has been a cornerstone of the community for generations.
+          Whether you're a seasoned player chasing a personal best or a newcomer discovering the game for the first time,
+          our course offers a welcoming environment surrounded by the natural beauty of the St. Lawrence Valley.
+          We take pride in exceptional course conditions, warm service, and a tradition of golf that runs deep
+          in this community.
+        </p>
+      </div>
+
+      <div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-n">18</div>
+            <div class="stat-l">Holes</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n"><small>Est.</small><br>1970</div>
+            <div class="stat-l">Founded</div>
+          </div>
+          <div class="stat">
+            <div class="stat-n">Par<br><small>72</small></div>
+            <div class="stat-l">Championship</div>
+          </div>
+          <div class="stat-wide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            <div class="stat-wide-text">
+              <strong>Kahnawake, Québec</strong>
+              <span>South Shore of Montréal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ COURSE ═══════════════════════════ -->
+<section class="course" id="course">
+  <div class="container">
+    <span class="eyebrow">What We Offer</span>
+    <h2 class="section-title">The LaFleur Experience</h2>
+    <p class="course-sub">
+      From tee to clubhouse, every aspect of LaFleur Golf is crafted to elevate your game and your day on the course.
+    </p>
+
+    <div class="cards">
+      <!-- Card 1 -->
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M4 40 L18 10 L34 26 L44 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="18" cy="10" r="3" fill="currentColor"/>
+          <path d="M4 40 h40" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+          <path d="M38 34 l4 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+          <path d="M38 34 l6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <h3>Course Layout</h3>
+        <p>
+          18 meticulously maintained holes winding through natural terrain. Strategic bunkering,
+          rolling fairways, and scenic water features challenge golfers of every skill level on
+          this championship layout.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <line x1="24" y1="8" x2="24" y2="42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M24 8 L36 18 L24 16 Z" fill="currentColor" opacity="0.8"/>
+          <ellipse cx="24" cy="42" rx="10" ry="3" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="24" cy="22" r="4.5" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+          <path d="M8 30 Q16 24 24 30 Q32 36 40 30" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" fill="none" opacity="0.45"/>
+        </svg>
+        <h3>Practice Facilities</h3>
+        <p>
+          Sharpen your game on our full-length driving range, dedicated short-game area,
+          and practice putting green. Dial in your swing before the first tee or work on
+          those scoring shots after your round.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="6" y="22" width="36" height="20" rx="2" stroke="currentColor" stroke-width="2.5"/>
+          <path d="M2 24 L24 10 L46 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="18" y="32" width="12" height="10" rx="1" stroke="currentColor" stroke-width="2"/>
+          <rect x="9"  y="27" width="8"  height="6"  rx="1" stroke="currentColor" stroke-width="1.5" opacity="0.55"/>
+          <rect x="31" y="27" width="8"  height="6"  rx="1" stroke="currentColor" stroke-width="1.5" opacity="0.55"/>
+        </svg>
+        <h3>Clubhouse & Bar</h3>
+        <p>
+          Unwind after your round in our welcoming clubhouse. Enjoy a cold drink on the
+          patio overlooking the 18th green, grab a bite at the bar, or celebrate your
+          best round yet with fellow members.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ GALLERY ═══════════════════════════ -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <span class="eyebrow">On the Grounds</span>
+    <h2 class="section-title">See the Course</h2>
+    <p class="gallery-sub">A glimpse of the greens, fairways, and grounds that make LaFleur Golf a truly special place to play.</p>
+
+    <!-- Replace placeholder images with actual course photography -->
+    <div class="gallery-grid">
+      <div class="g-item">
+        <img src="https://placehold.co/800x600/163226/f3ecd8?text=Course+Fairway" alt="Course fairway" loading="lazy" />
+      </div>
+      <div class="g-item">
+        <img src="https://placehold.co/600x300/1e4a34/f3ecd8?text=18th+Green" alt="18th green" loading="lazy" />
+      </div>
+      <div class="g-item">
+        <img src="https://placehold.co/600x300/0f2018/d4af60?text=Driving+Range" alt="Driving range" loading="lazy" />
+      </div>
+      <div class="g-item">
+        <img src="https://placehold.co/600x300/2a6347/f3ecd8?text=Clubhouse" alt="Clubhouse" loading="lazy" />
+      </div>
+      <div class="g-item">
+        <img src="https://placehold.co/600x300/163226/d4af60?text=Course+at+Sunrise" alt="Course at sunrise" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ CONTACT ═══════════════════════════ -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+
+      <div>
+        <span class="eyebrow">Find Us</span>
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="contact-lead">
+          We'd love to have you on the course. Reach out to book your tee time,
+          ask about memberships, or just say hello.
+        </p>
+
+        <div class="info-block">
+          <h4>Address</h4>
+          <p>
+            LaFleur Golf Club<br>
+            Kahnawake, Québec<br>
+            J0L 1B0
+          </p>
+        </div>
+
+        <div class="info-block">
+          <h4>Contact</h4>
+          <a href="tel:+15141234567">(514) 123-4567</a>
+          <a href="mailto:info@lafleurgolf.com">info@lafleurgolf.com</a>
+        </div>
+
+        <div class="info-block">
+          <h4>Hours of Operation</h4>
+          <table class="hours" aria-label="Hours of operation">
+            <tbody>
+              <tr><td>Monday – Friday</td><td>7:00 am – 7:00 pm</td></tr>
+              <tr><td>Saturday</td>        <td>6:00 am – 8:00 pm</td></tr>
+              <tr><td>Sunday</td>          <td>6:00 am – 7:00 pm</td></tr>
+              <tr><td>Season</td>          <td>April – October</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Replace the src with the actual Google Maps embed URL for LaFleur Golf Kahnawake -->
+      <div class="map-wrap">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11176.0!2d-73.685!3d45.403!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4cc908b44e5dc12b%3A0x9f4d7f2c2b3daf57!2sKahnawake%2C+QC!5e0!3m2!1sen!2sca!4v1234567890"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="LaFleur Golf location map"
+        ></iframe>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  <div class="footer-row">
+    <div class="footer-logo">
+      <img class="foot-badge" src="logo.png" alt="" />
+      LaFleur <span>Golf</span>
+    </div>
+
+    <ul class="footer-nav">
+      <li><a href="#about">About</a></li>
+      <li><a href="#course">The Course</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="socials">
+      <!-- Instagram -->
+      <a href="#" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <!-- Facebook -->
+      <a href="#" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+        </svg>
+      </a>
+      <!-- X / Twitter -->
+      <a href="#" aria-label="X (Twitter)">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-row">
+    <p class="footer-copy">
+      &copy; 2025 LaFleur Golf Club, Kahnawake. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+
+<script>
+  // ── Sticky nav opacity on scroll ──
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // run on load in case page is already scrolled
+
+  // ── Mobile hamburger ──
+  const hamburger   = document.getElementById('hamburger');
+  const mobileMenu  = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', String(open));
+  });
+
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+  }
+
+  // close on outside click
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
+  });
+</script>
+
+</body>
+</html>
