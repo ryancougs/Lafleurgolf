@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -503,6 +502,13 @@
       flex-shrink: 0; text-align: right;
       font-size: 0.78rem; color: rgba(255,255,255,0.68);
     }
+    .hero-tournament .tt-schedule li.has-detail { flex-wrap: wrap; }
+    .hero-tournament .ts-detail {
+      flex-basis: 100%; width: 100%;
+      margin-top: 0.35rem;
+      font-size: 0.74rem; line-height: 1.4;
+      color: rgba(255,255,255,0.6);
+    }
     @media (max-width: 600px) {
       .hero-tournament .tt-schedule li { flex-wrap: wrap; gap: 0.2rem 0.75rem; }
       .hero-tournament .ts-name { font-size: 0.98rem; }
@@ -547,7 +553,7 @@
     <div class="hero-tournament" role="note" aria-label="Upcoming tournaments">
       <span class="tt-tag">Upcoming Tournaments</span>
       <ul class="tt-schedule">
-        <li><span class="ts-date">Aug&nbsp;29</span><span class="ts-name">Tournament</span><span class="ts-time">11:00&nbsp;AM</span></li>
+        <li class="has-detail"><span class="ts-date">Aug&nbsp;29</span><span class="ts-name">Tournament</span><span class="ts-time">11:00&nbsp;AM &middot; Shotgun</span><span class="ts-detail">Public tee times 7:00&ndash;8:30&nbsp;AM &mdash; nine holes only, walking only. Course reopens to the public after 5:00&nbsp;PM.</span></li>
         <li><span class="ts-date">Sep&nbsp;3</span><span class="ts-name">Otis Elevators</span><span class="ts-time">11:00&nbsp;AM &middot; Shotgun</span></li>
         <li><span class="ts-date">Sep&nbsp;12</span><span class="ts-name">Daryl Angel Network</span><span class="ts-time">10:00&nbsp;AM</span></li>
         <li><span class="ts-date">Sep&nbsp;19</span><span class="ts-name">Suicide Prevention</span><span class="ts-time">11:00&nbsp;AM</span></li>
